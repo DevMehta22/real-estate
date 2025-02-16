@@ -3,19 +3,19 @@ const jwt = require('jsonwebtoken')
 
 const userSchema = require('../models/userSchema')
 
-const createToken = (_id) => {
-    return jwt.sign({_id}, process.env.SECRET, {expiresIn: '3d'})
+const createToken = (_id,role) => {
+    return jwt.sign({_id,role}, process.env.SECRET, {expiresIn: '3d'})
 }
 
 const loginUser = async (req,res) => {
-    const {Email, Password, Role} = req.body 
+    const {Email, Password} = req.body 
 
     try{
-        const User = await userSchema.login(Email, Password,Role)
+        const User = await userSchema.login(Email, Password)
 
-        const token = createToken(User._id)
+        const token = createToken(User._id,User.Role)
 
-        res.status(200).json({Email, token})
+        res.status(200).json({user:{id:User.id,email:User.Email,role:User.Role},token})
     }
     catch(error) {
         res.status(400).json({error: error.message})
@@ -33,7 +33,7 @@ const signupUser = async (req,res) => {
 
         const token = createToken(User._id)
         
-        res.status(200).json({Email, token})
+        res.status(200).json({user:{email:User.email}, token})
 
     } catch(error) {
         res.status(400).json({error: error.message})

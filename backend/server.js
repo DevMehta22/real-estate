@@ -8,6 +8,7 @@ const path = require('path')
 const userRoutes = require('./routes/userRoutes')
 const sellerRoutes = require('./routes/sellerRoutes')
 const buyerRoutes = require('./routes/buyerRoutes')
+const subscriptionRoutes = require('./routes/subscriptionRoutes')
 const setupSwagger = require('./swaggerui')
 
 const app = express()
@@ -27,7 +28,7 @@ app.use((req,res,next) => {
 app.use('/api/auth',userRoutes)
 app.use('/api/seller',sellerRoutes)
 app.use('/api/buyer',buyerRoutes)
-
+app.use('/api/subscription',subscriptionRoutes)
 // Setup Swagger documentation
 setupSwagger(app)
 
