@@ -5,8 +5,10 @@ const helmet = require('helmet')
 const morgan = require('morgan')
 const cors = require('cors')
 const path = require('path')
-const routes = require('./routes/userRoutes')
-const setupSwagger = require('./swagger')
+const userRoutes = require('./routes/userRoutes')
+const sellerRoutes = require('./routes/sellerRoutes')
+const buyerRoutes = require('./routes/buyerRoutes')
+const setupSwagger = require('./swaggerui')
 
 const app = express()
 
@@ -20,11 +22,14 @@ app.use((req,res,next) => {
     next()
 })
 
+
+
+app.use('/api/auth',userRoutes)
+app.use('/api/seller',sellerRoutes)
+app.use('/api/buyer',buyerRoutes)
+
 // Setup Swagger documentation
 setupSwagger(app)
-
-app.use('/api/auth',routes)
-
 
 mongoose.connect(process.env.MONG_URI)
     .then(() => {
