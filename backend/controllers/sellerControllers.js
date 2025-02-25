@@ -1,54 +1,63 @@
-const multer = require('multer');
-const path = require('path');
 const Seller = require('../models/sellerSchema');
 const PropertyImage = require('../models/propertyImagesSchema');
+const Subscription = require('../models/subscriptionSchema')
+const expressHandler = require('express-async-handler')
 
-// Configure Multer storage
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/properties/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
-});
 
-// File filter for image validation
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image/')) {
-    cb(null, true);
-  } else {
-    cb(new Error('Only image files are allowed!'), false);
-  }
-};
+// // File filter for image validation
+// const fileFilter = (req, file, cb) => {
+//   if (file.mimetype.startsWith('image/')) {
+//     cb(null, true);
+//   } else {
+//     cb(new Error('Only image files are allowed!'), false);
+//   }
+// };
 
-// Initialize Multer
-const upload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
-  limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB limit
-  }
-}).array('images', 10); // Allow up to 10 images
+
 
 // Create Seller Listing
 const createSellerListing = async (req, res) => {
     try {
         const {userId} = req.params;
+        const isSubscribed  = await Subscription.findOne({userId:userId})
+        if(!isSubscribed || isSubscribed.status!=='active'){
+            return res.status(401).json({message: 'You are not subscribed to our service'})
+        }
+        
         const {propertyType, location, area, price, description, phoneNumber, amenities, bedrooms, bathrooms } = req.body;
+        const plantype = isSubscribed.plantype
+        const listingCount = await Seller.countDocuments({userId:userId})
+        let maxlimt;
+        switch (plantype) {
+            case "basic":
+                maxlimt = 5;
+                break;
+            case "basic":
+                maxlimt = 15;
+                break;
+            case "basic":
+                maxlimt = INT_MAX;
+                break;
+            default:
+                res.status(400).json({ success: false, message: "Invalid plan" });
+                break;
+        }
+        if(listingCount>=maxlimt){
+            return res.status(400).json({ success: false, message: "You have reached your listing limit" });
+        }
+
         
         const newListing = new Seller({
-            userId,
-            propertyType,
-            location,
-            area,
-            price,
-            description,
-            phoneNumber,
-            amenities,
-            bedrooms,
-            bathrooms,
-            createdBy: userId
+            userId:userId,
+            PropertyType:propertyType,
+            Location:location,
+            Area:area,
+            Price:price,
+            Description:description,
+            PhoneNumber:phoneNumber,
+            Amenities:amenities,
+            Bedrooms:bedrooms,
+            Bathrooms:bathrooms,
         });
 
         const savedListing = await newListing.save();
@@ -91,7 +100,6 @@ const updateListing = async (req, res) => {
     try {
         const { id } = req.params;
         const updatedData = req.body;
-        
         const updatedListing = await Seller.findByIdAndUpdate(id, updatedData, { new: true });
         
         if (!updatedListing) {
@@ -125,20 +133,15 @@ const deleteListing = async (req, res) => {
 };
 
 // Add Images to Listing
-const addImages = async (req, res) => {
+const addImages = expressHandler(async (req, res) => {
     try {
         const { sellerId } = req.params;
         
         // Process uploaded files
-        upload(req, res, async (err) => {
-            if (err) {
-                return res.status(400).json({ message: err.message });
-            }
-
+    
             if (!req.files || req.files.length === 0) {
                 return res.status(400).json({ message: 'No files uploaded' });
             }
-
             // Create image objects from uploaded files
             const images = req.files.map(file => ({
                 url: file.path,
@@ -156,11 +159,10 @@ const addImages = async (req, res) => {
             await propertyImages.save();
 
             res.status(201).json(propertyImages);
-        });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
-};
+});
 
 
 

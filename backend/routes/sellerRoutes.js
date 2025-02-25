@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const sellerController = require('../controllers/sellerControllers');
 const {checkAuth,isSeller} = require('../middlewares/auth');
+const {upload} = require('../upload')
 
 // Create listing
 router.post('/:userId', checkAuth,isSeller, sellerController.createSellerListing);
@@ -19,6 +20,6 @@ router.put('/:id', checkAuth,isSeller, sellerController.updateListing);
 router.delete('/:id', checkAuth,isSeller, sellerController.deleteListing);
 
 // Add images to listing
-router.post('/images/:sellerId', checkAuth,isSeller, sellerController.addImages);
+router.post('/images/:sellerId', checkAuth,isSeller,upload.array("images",10), sellerController.addImages);
 
 module.exports = router;

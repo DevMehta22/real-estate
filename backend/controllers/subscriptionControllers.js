@@ -16,17 +16,42 @@ const getKey = async (req, res) => {
 
 const buySubscription = async(req,res)=>{
     try{
+        const user_id = req.user._id;
+        const existingSubscription = await subscriptionSchema.findOne({userId:user_id});
+        const {plan_type} = req.body;
+
+        if(existingSubscription && existingSubscription.status == "active"){
+            return res.status(400).json({message:"You already have an active subscription"});
+        }
+        let planId;
+        switch (plan_type) {
+            case "basic":
+                planId = process.env.BASIC_PLAN_ID;
+                break;
+            case "premium":
+                planId = process.env.PREMIUM_PLAN_ID;
+                break;
+            case "enterprise":
+                planId = process.env.ENTERPRISE_PLAN_ID;
+                break;
+            default:
+                return res.status(400).json({ success: false, message: "Invalid plan type" });
+        }
+            
         const subscription = await instance.subscriptions.create({
-            plan_id: process.env.PLAN_ID,
+            plan_id: planId,
             customer_notify: 1,
             total_count: 12,
           })
+        
+        subscription.status = "active"
           
         
         const newSubscription = new SubscriptionSchema({
             userId: req.user._id,
             subscriptionId: subscription.id,
-            plan:process.env.PLAN_ID,
+            planId:planId,
+            plantype:plan_type,
             status:subscription.status,
         })
     
@@ -34,7 +59,7 @@ const buySubscription = async(req,res)=>{
         res.status(201).json({sucess:true,id:subscription.id})
     }catch(err){
         console.log(err)
-        res.status(500).json({sucess:true,message:"Error in creating subscription"})
+        res.status(500).json({sucess:false,message:"Error in creating subscription"})
     }
     
 }
@@ -42,7 +67,7 @@ const buySubscription = async(req,res)=>{
 const paymentVerification = async(req,res)=>{
     try{
         const {razorpay_subscription_id,razorpay_payment_id,razorpay_signature} = req.body
-        const subsription = subscriptionSchema.findOne({userId:req.user_id});
+        const subsription = await subscriptionSchema.findOne({userId:req.user_id});
         const shasum = crypto.createHmac("sha256", instance.key_secret);
         const gen_signature = shasum.update(`${razorpay_payment_id}|${subsription.subscriptionId}`).digest("hex");
         if(gen_signature === razorpay_signature){

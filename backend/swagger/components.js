@@ -1,28 +1,96 @@
 module.exports = {
   schemas: {
-    BuyerProfile: {
+    ErrorResponse: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
-        email: { type: 'string', format: 'email' },
-        phone: { type: 'string' },
-        preferences: {
-          type: 'object',
-          properties: {
-            location: { type: 'string' },
-            priceRange: {
-              type: 'object',
-              properties: {
-                min: { type: 'number' },
-                max: { type: 'number' }
-              }
-            },
-            propertyType: { type: 'string' }
-          }
+        success: { type: 'boolean' },
+        message: { type: 'string' }
+      }
+    },
+    SubscriptionRequest: {
+      type: 'object',
+      properties: {
+        plan_type: {
+          type: 'string',
+          enum: ['basic', 'premium', 'enterprise']
         }
       },
-      required: ['name', 'email']
+      required: ['plan_type']
     },
+    PaymentVerification: {
+      type: 'object',
+      properties: {
+        razorpay_subscription_id: { type: 'string' },
+        razorpay_payment_id: { type: 'string' },
+        razorpay_signature: { type: 'string' }
+      },
+      required: [
+        'razorpay_subscription_id',
+        'razorpay_payment_id',
+        'razorpay_signature'
+      ]
+    },
+    RazorpayKeyResponse: {
+      type: 'object',
+      properties: {
+        key: { type: 'string' }
+      }
+    },
+    "BuyerProfile": {
+  "type": "object",
+  "properties": {
+    "contactInfo": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string",
+          "pattern": "^[0-9]{10}$"
+        },
+        "address": {
+          "type": "string"
+        }
+      },
+      "required": ["address"]
+    },
+    "preferences": {
+      "type": "object",
+      "properties": {
+        "locations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "propertyTypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "minPrice": {
+          "type": "number"
+        },
+        "maxPrice": {
+          "type": "number"
+        },
+        "minBedrooms": {
+          "type": "number"
+        },
+        "minBathrooms": {
+          "type": "number"
+        }
+      }
+    },
+    "budget": {
+      "type": "number",
+      "minimum": 0
+    }
+  },
+  "required": ["contactInfo", "preferences", "budget"]
+},
     Listing: {
       type: 'object',
       properties: {
@@ -40,7 +108,7 @@ module.exports = {
           items: { type: 'string' }
         }
       },
-      required: ['title', 'price', 'location']
+      // required: ['title', 'price', 'location']
     }
   }
 };

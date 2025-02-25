@@ -1,5 +1,4 @@
 const Buyer = require('../models/buyerSchema');
-const Seller = require('../models/sellerSchema');
 
 // Create Buyer Profile
 const createBuyerProfile = async (req, res) => {
@@ -128,10 +127,11 @@ const trackViewedProperty = async (req, res) => {
     try {
         const { userId, propertyId } = req.params;
         
-        const buyer = await Buyer.findOne({ userId });
+        const buyer = await Buyer.findOne({ userId:userId });
         if (!buyer) {
             return res.status(404).json({ message: 'Buyer profile not found' });
         }
+        console.log(buyer)
 
         // Add or update view timestamp
         const existingView = buyer.viewedProperties.find(

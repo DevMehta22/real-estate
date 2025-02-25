@@ -9,8 +9,11 @@ const subscriptionSchema = new mongoose.Schema({
     subscriptionId: {
         type: String
     },
-    plan: {
+    planId: {
         type: String
+    },
+    plantype:{
+        type:String
     },
     status: {
         type: String

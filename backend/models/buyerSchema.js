@@ -7,6 +7,9 @@ const buyerSchema = new mongoose.Schema({
         required: true
     },
     contactInfo: {
+        name:{
+            type: String,
+        },
         phone: {
             type: String,
             validate: {

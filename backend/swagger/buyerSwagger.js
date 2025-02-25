@@ -4,7 +4,7 @@ module.exports = {
         post: {
           summary: 'Create a buyer profile',
           tags: ['Buyer'],
-          security: [{ bearerAuth: [] }],
+          security: [{ customAuth: [] }],
           parameters: [
             {
               in: 'path',
@@ -29,7 +29,7 @@ module.exports = {
         get: {
           summary: 'Get buyer profile',
           tags: ['Buyer'],
-          security: [{ bearerAuth: [] }],
+          security: [{ customAuth: [] }],
           parameters: [
             {
               in: 'path',
@@ -53,7 +53,7 @@ module.exports = {
         put: {
           summary: 'Update buyer profile',
           tags: ['Buyer'],
-          security: [{ bearerAuth: [] }],
+          security: [{ customAuth: [] }],
           parameters: [
             {
               in: 'path',
@@ -78,7 +78,7 @@ module.exports = {
         delete: {
           summary: 'Delete buyer profile',
           tags: ['Buyer'],
-          security: [{ bearerAuth: [] }],
+          security: [{ customAuth: [] }],
           parameters: [
             {
               in: 'path',
@@ -97,7 +97,7 @@ module.exports = {
         get: {
           summary: 'Save a property',
           tags: ['Buyer'],
-          security: [{ bearerAuth: [] }],
+          security: [{ customAuth: [] }],
           parameters: [
             { in: 'path', name: 'userId', required: true, schema: { type: 'string' } },
             { in: 'path', name: 'propertyId', required: true, schema: { type: 'string' } },
@@ -112,7 +112,7 @@ module.exports = {
         delete: {
           summary: 'Remove a saved property',
           tags: ['Buyer'],
-          security: [{ bearerAuth: [] }],
+          security: [{ customAuth: [] }],
           parameters: [
             { in: 'path', name: 'userId', required: true, schema: { type: 'string' } },
             { in: 'path', name: 'propertyId', required: true, schema: { type: 'string' } },
@@ -127,7 +127,7 @@ module.exports = {
         get: {
           summary: 'Track viewed property',
           tags: ['Buyer'],
-          security: [{ bearerAuth: [] }],
+          security: [{ customAuth: [] }],
           parameters: [
             { in: 'path', name: 'userId', required: true, schema: { type: 'string' } },
             { in: 'path', name: 'propertyId', required: true, schema: { type: 'string' } },

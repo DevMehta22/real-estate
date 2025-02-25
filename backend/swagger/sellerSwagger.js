@@ -4,7 +4,7 @@ module.exports = {
       post: {
         summary: 'Create a new property listing',
         tags: ['Seller'],
-        security: [{ bearerAuth: [] }],
+        security: [{ customAuth: [] }],
         parameters: [
           {
             in: 'path',
@@ -31,7 +31,7 @@ module.exports = {
       get: {
         summary: 'Get all listings',
         tags: ['Seller'],
-        security: [{ bearerAuth: [] }],
+        security: [{ customAuth: [] }],
         responses: {
           '200': {
             description: 'List of all listings',
@@ -51,7 +51,7 @@ module.exports = {
       get: {
         summary: 'Get a single listing by ID',
         tags: ['Seller'],
-        security: [{ bearerAuth: [] }],
+        security: [{ customAuth: [] }],
         parameters: [
           {
             in: 'path',
@@ -75,7 +75,7 @@ module.exports = {
       put: {
         summary: 'Update a listing',
         tags: ['Seller'],
-        security: [{ bearerAuth: [] }],
+        security: [{ customAuth: [] }],
         parameters: [
           {
             in: 'path',
@@ -100,7 +100,7 @@ module.exports = {
       delete: {
         summary: 'Delete a listing',
         tags: ['Seller'],
-        security: [{ bearerAuth: [] }],
+        security: [{ customAuth: [] }],
         parameters: [
           {
             in: 'path',
@@ -119,7 +119,7 @@ module.exports = {
       post: {
         summary: 'Add images to a listing',
         tags: ['Seller'],
-        security: [{ bearerAuth: [] }],
+        security: [{ customAuth: [] }],
         parameters: [
           {
             in: 'path',

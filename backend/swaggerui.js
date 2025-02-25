@@ -3,6 +3,7 @@ const swaggerUi = require('swagger-ui-express');
 const sellerSwagger = require('./swagger/sellerSwagger');
 const buyerSwagger = require('./swagger/buyerSwagger');
 const userSwagger = require('./swagger/userSwagger');
+const subscriptionSwagger = require("./swagger/subscriptionSwagger")
 const components = require('./swagger/components');
 
 const options = {
@@ -24,20 +25,22 @@ const options = {
         ...components.schemas,
       },
       securitySchemes: {
-        bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
+        customAuth: {
+          type: 'apiKey',
+          in: 'header',
+          name: 'Authorization',
+          description: 'Token without Bearer prefix'
         },
       },
     },
     security: [{
-      bearerAuth: []
+      customAuth: []
     }],
     paths: {
       ...sellerSwagger.paths,
       ...buyerSwagger.paths,
-      ...userSwagger.paths
+      ...userSwagger.paths,
+      ...subscriptionSwagger.paths
     },
   },
   apis: ['./routes/*.js'],
