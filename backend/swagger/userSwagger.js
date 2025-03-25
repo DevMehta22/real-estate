@@ -20,7 +20,7 @@ module.exports = {
             },
           },
           responses: {
-            201: { description: 'User created successfully' },
+            200: { description: 'User created successfully' },
             400: { description: 'Invalid input' },
           },
         },

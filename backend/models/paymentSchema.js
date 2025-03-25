@@ -10,7 +10,7 @@ const paymentSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    razorpay_order_id:{
+    razorpay_subscription_id:{
         type:String,
         required:true
     },

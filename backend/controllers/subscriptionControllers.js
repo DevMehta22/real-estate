@@ -38,25 +38,26 @@ const buySubscription = async(req,res)=>{
                 return res.status(400).json({ success: false, message: "Invalid plan type" });
         }
             
-        const subscription = await instance.subscriptions.create({
+        await instance.subscriptions.create({
             plan_id: planId,
             customer_notify: 1,
             total_count: 12,
-          })
-        
-        subscription.status = "active"
+        }).then(async(subscription)=>{
+            subscription.status = "active"
+            console.log(subscription)
           
         
-        const newSubscription = new SubscriptionSchema({
+            const newSubscription = new SubscriptionSchema({
             userId: req.user._id,
             subscriptionId: subscription.id,
             planId:planId,
             plantype:plan_type,
             status:subscription.status,
-        })
+            })
     
         await newSubscription.save();
-        res.status(201).json({sucess:true,id:subscription.id})
+        res.status(201).json({sucess:true,id:subscription.id})   
+        })   
     }catch(err){
         console.log(err)
         res.status(500).json({sucess:false,message:"Error in creating subscription"})
@@ -67,7 +68,7 @@ const buySubscription = async(req,res)=>{
 const paymentVerification = async(req,res)=>{
     try{
         const {razorpay_subscription_id,razorpay_payment_id,razorpay_signature} = req.body
-        const subsription = await subscriptionSchema.findOne({userId:req.user_id});
+        const subsription = await subscriptionSchema.findOne({userId:req.user._id});
         const shasum = crypto.createHmac("sha256", instance.key_secret);
         const gen_signature = shasum.update(`${razorpay_payment_id}|${subsription.subscriptionId}`).digest("hex");
         if(gen_signature === razorpay_signature){
@@ -76,7 +77,7 @@ const paymentVerification = async(req,res)=>{
                 res.status(200).json({sucess:true,message:"Payment already done!"})
             }else{
                 await paymentSchema.create({
-                    subscriptionId:subsription.subscriptionId,
+                    subscriptionId:subsription._id,
                     razorpay_payment_id:razorpay_payment_id,
                     razorpay_subscription_id:razorpay_subscription_id,
                     razorpay_signature:razorpay_signature,
