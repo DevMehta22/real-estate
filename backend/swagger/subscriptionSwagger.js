@@ -128,6 +128,33 @@ module.exports = {
           }
         }
       }
+    },
+    '/api/subsription/': {
+      get: {
+        summary: 'Check if user is subscribed',
+        description: 'Return true if user is subscribed',
+        tags: ['Subscription'],
+        security: [{ customAuth: [] }],
+        responses: {
+          200: {
+            description: 'You are subscribed/You are not subscribed',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    key: { type: 'string' }
+                  }
+                }
+              }
+            }
+          },
+          500: {
+            description: 'Error in checking subscription',
+            $ref: '#/components/schemas/ErrorResponse'
+          }
+        }
+      }
     }
   }
 };

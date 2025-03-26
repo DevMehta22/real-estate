@@ -16,6 +16,7 @@ const getKey = async (req, res) => {
 
 const buySubscription = async(req,res)=>{
     try{
+        console.log(req.user)
         const user_id = req.user._id;
         const existingSubscription = await subscriptionSchema.findOne({userId:user_id});
         const {plan_type} = req.body;
@@ -56,11 +57,11 @@ const buySubscription = async(req,res)=>{
             })
     
         await newSubscription.save();
-        res.status(201).json({sucess:true,id:subscription.id})   
+        res.status(201).json({success:true,id:subscription.id})   
         })   
     }catch(err){
         console.log(err)
-        res.status(500).json({sucess:false,message:"Error in creating subscription"})
+        res.status(500).json({success:false,message:"Error in creating subscription"})
     }
     
 }
@@ -74,7 +75,7 @@ const paymentVerification = async(req,res)=>{
         if(gen_signature === razorpay_signature){
             const payment = await paymentSchema.findOne({razorpay_payment_id:razorpay_payment_id});
             if(payment){
-                res.status(200).json({sucess:true,message:"Payment already done!"})
+                res.status(200).json({success:true,message:"Payment already done!"})
             }else{
                 await paymentSchema.create({
                     subscriptionId:subsription._id,
@@ -83,19 +84,33 @@ const paymentVerification = async(req,res)=>{
                     razorpay_signature:razorpay_signature,
                 }).then(async()=>{
                     await subscriptionSchema.findOneAndUpdate({userId:req.user._id},{status:"active"},{new:true});
-                    res.status(200).json({sucess:true,message:"Payment successful"})
+                    res.status(200).json({success:true,message:"Payment successful"})
                 })
 
             }
             }else{
-                res.status(400).json({sucess:false,message:"Invalid signature"})
+                res.status(400).json({success:false,message:"Invalid signature"})
                 }
     }catch(err){
         console.log(err)
-        res.status(500).json({sucess:false,message:"Error in verifying payment"})
+        res.status(500).json({success:false,message:"Error in verifying payment"})
     }
 }
 
+const isSubscribed = async(req,res)=>{
+    try{
+        const userId = req.user._id;
+        const subscription = await subscriptionSchema.findOne({userId:userId});
+        if(subscription && subscription.status == 'active'){
+            res.status(200).json({success:true,message:"You are subscribed"});
+        }else{
+            res.status(200).json({success:false,message:"You are not subscribed"});
+        }
+    }catch(error){
+        console.log(error)
+        res.status(500).json({success:false,message:"Error in checking subscription"})
+    }
+}
 
-module.exports = {buySubscription,paymentVerification,getKey}
+module.exports = {buySubscription,paymentVerification,isSubscribed,getKey}
 

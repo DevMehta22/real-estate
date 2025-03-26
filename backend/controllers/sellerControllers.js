@@ -20,7 +20,8 @@ const createSellerListing = async (req, res) => {
     try {
         const {userId} = req.params;
         const isSubscribed  = await Subscription.findOne({userId:userId})
-        if(!isSubscribed || isSubscribed.status!=='active'){
+        console.log(isSubscribed)
+        if(!isSubscribed || isSubscribed.status!='active'){
             return res.status(401).json({message: 'You are not subscribed to our service'})
         }
         
@@ -32,11 +33,11 @@ const createSellerListing = async (req, res) => {
             case "basic":
                 maxlimt = 5;
                 break;
-            case "basic":
+            case "premium":
                 maxlimt = 15;
                 break;
-            case "basic":
-                maxlimt = INT_MAX;
+            case "enterprise":
+                maxlimt = 10e9;
                 break;
             default:
                 res.status(400).json({ success: false, message: "Invalid plan" });
@@ -70,7 +71,8 @@ const createSellerListing = async (req, res) => {
 // Get All Seller Listings
 const getAllListings = async (req, res) => {
     try {
-        const listings = await Seller.find()
+        const id = req.user._id;
+        const listings = await Seller.find({userId:id})
             .populate('userId', 'Email')
         res.status(200).json(listings);
     } catch (error) {
@@ -99,8 +101,20 @@ const getListingById = async (req, res) => {
 const updateListing = async (req, res) => {
     try {
         const { id } = req.params;
-        const updatedData = req.body;
-        const updatedListing = await Seller.findByIdAndUpdate(id, updatedData, { new: true });
+        const {propertyType, location, area, price, description, phoneNumber, amenities, bedrooms, bathrooms } = req.body;
+        const userId = req.user._id;
+        const updatedListing = await Seller.findByIdAndUpdate(id, { 
+            userId:userId,
+            PropertyType:propertyType,
+            Location:location,
+            Area:area,
+            Price:price,
+            Description:description,
+            PhoneNumber:phoneNumber,
+            Amenities:amenities,
+            Bedrooms:bedrooms,
+            Bathrooms:bathrooms}, { new: true });
+        console.log(updatedListing)
         
         if (!updatedListing) {
             return res.status(404).json({ message: 'Listing not found' });
@@ -135,7 +149,7 @@ const deleteListing = async (req, res) => {
 // Add Images to Listing
 const addImages = expressHandler(async (req, res) => {
     try {
-        const { sellerId } = req.params;
+        const { listingId } = req.params;
         
         // Process uploaded files
     
@@ -144,14 +158,14 @@ const addImages = expressHandler(async (req, res) => {
             }
             // Create image objects from uploaded files
             const images = req.files.map(file => ({
-                url: file.path,
+                url: file.filename,
                 description: file.originalname
             }));
 
             // Find or create image document
-            let propertyImages = await PropertyImage.findOne({ sellerId });
+            let propertyImages = await PropertyImage.findOne({ sellerId:listingId });
             if (!propertyImages) {
-                propertyImages = new PropertyImage({ sellerId, images: [] });
+                propertyImages = new PropertyImage({ sellerId:listingId, images: [] });
             }
 
             // Add new images
@@ -164,6 +178,36 @@ const addImages = expressHandler(async (req, res) => {
     }
 });
 
+const getImages = async(req,res)=>{
+    try{
+        const {listingId} = req.params;
+        const propertyImages = await PropertyImage.findOne({sellerId:listingId});
+        if(!propertyImages){
+            return res.status(404).json({message: 'No images found'});
+            }
+            res.status(200).json(propertyImages.images);
+    }catch(error){
+        res.status(500).json({message: error.message});
+    }
+}
+
+const deleteAllImages = async(req,res)=>{
+    try{
+        const {listingId} = req.params;
+        const propertyImages = await PropertyImage.findOne({sellerId:listingId});
+        console.log(propertyImages)
+        if(!propertyImages){
+            return res.status(404).json({message: 'No images found'});
+            }
+            propertyImages.images = [];
+            await propertyImages.save();
+            res.status(200).json({message: 'Images deleted successfully'});
+
+    }catch(error){
+        res.status(500).json({message: error.message});
+    }
+}
+
 
 
 module.exports = {
@@ -173,4 +217,6 @@ module.exports = {
     updateListing,
     deleteListing,
     addImages,
+    getImages,
+    deleteAllImages
 };

@@ -14,8 +14,9 @@ const Login = () => {
         }
         // Simulate login process
         await axios.post("http://localhost:3000/api/auth/login",{Email:email,Password:password}).then((res)=>{
-                console.log(res.data);
+                console.log(res.data.user.id);
                 localStorage.setItem('token',res.data.token)
+                localStorage.setItem('id',res.data.user.id)
                 const user = res.data.user;
                 user.role == 'Seller'?window.location.href = '/seller': window.location.href ='buyer';
                 

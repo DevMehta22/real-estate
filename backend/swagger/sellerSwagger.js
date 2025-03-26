@@ -115,40 +115,59 @@ module.exports = {
         }
       }
     },
-    '/api/seller/images/{sellerId}': {
+    '/api/seller/images/{listingId}': {
       post: {
-        summary: 'Add images to a listing',
+        summary: 'Get images of a listing',
         tags: ['Seller'],
         security: [{ customAuth: [] }],
         parameters: [
           {
             in: 'path',
-            name: 'sellerId',
+            name: 'listingId',
             required: true,
             schema: { type: 'string' }
           }
         ],
-        requestBody: {
-          required: true,
-          content: {
-            'multipart/form-data': {
-              schema: {
-                type: 'object',
-                properties: {
-                  images: {
-                    type: 'array',
-                    items: { type: 'string', format: 'binary' }
-                  }
-                }
-              }
-            }
-          }
-        },
         responses: {
-          '201': { description: 'Images added successfully' },
-          '400': { description: 'Invalid input' }
+          '200': { description: 'Images fetched successfully' },
+          '500': { description: 'Error fetching images' }
         }
+      },
+      get : {
+        summary: 'Get images of a listing',
+        tags: ['Seller'],
+        security: [{ customAuth: [] }],
+        parameters: [
+          {
+            in: 'path',
+            name: 'listingId',
+            required: true,
+            schema: { type: 'string' }
+            }
+            ],
+            responses: {
+              '200': { description: 'Images fetched successfully' },
+              '500': { description: 'Error fetching images' }
+              }
+              
+      },
+      delete : {
+        summary: 'Delete images of a listing',
+        tags: ['Seller'],
+        security: [{ customAuth: [] }],
+        parameters: [
+          {
+            in: 'path',
+            name: 'listingId',
+            required: true,
+            schema: { type: 'string' }
+            }
+            ],
+            responses: {
+              '200': { description: 'Images deleted successfully' },
+              '500': { description: 'Error deleting images' }
+              }
       }
-    }
+    },
   }
 };

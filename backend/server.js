@@ -20,7 +20,7 @@ app.use(cors(
     {
         origin: '*',
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
-        allowedHeaders: ['Content-Type', 'Authorization']
+        allowedHeaders: ['Content-Type', 'Authorization'],
         
     }
 ))
@@ -29,6 +29,11 @@ app.use((req,res,next) => {
     console.log(req.path, req.method)
     next()
 })
+
+app.use("/uploads",(req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+    next();}, express.static(path.join(__dirname, "uploads")));
 
 
 

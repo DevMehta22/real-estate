@@ -20,6 +20,12 @@ router.put('/:id', checkAuth,isSeller, sellerController.updateListing);
 router.delete('/:id', checkAuth,isSeller, sellerController.deleteListing);
 
 // Add images to listing
-router.post('/images/:sellerId', checkAuth,isSeller,upload.array("images",10), sellerController.addImages);
+router.post('/images/:listingId', checkAuth,isSeller,upload.array("images",10), sellerController.addImages);
+
+// Get images of listing
+router.get('/images/:listingId',checkAuth,isSeller,sellerController.getImages)
+
+// Delete all images
+router.delete('/images/:listingId', checkAuth,isSeller, sellerController.deleteAllImages);
 
 module.exports = router;
