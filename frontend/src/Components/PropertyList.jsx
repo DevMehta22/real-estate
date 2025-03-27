@@ -3,7 +3,7 @@ import axios from "axios";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import BASE_URL from "../url";
 
-const PropertyList = ({ userId }) => {
+const PropertyList = ({ userId, searchQuery }) => {
     const [properties, setProperties] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -44,17 +44,21 @@ const PropertyList = ({ userId }) => {
         }
     };
 
+    const filteredProperties = properties.filter((property) =>
+        property.Location.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     if (loading) return <p>Loading properties...</p>;
     if (error) return <p className="text-red-500">{error}</p>;
 
     return (
         <div className="p-6 bg-white rounded-lg shadow-md">
             <h2 className="text-2xl font-semibold mb-4 text-gray-800">Available Properties</h2>
-            {properties.length === 0 ? (
+            {filteredProperties.length === 0 ? (
                 <p className="text-gray-600">No properties found.</p>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {properties.map((property) => (
+                    {filteredProperties.map((property) => (
                         <div key={property._id} className="border p-4 rounded-lg shadow-md bg-gray-50 relative">
                             {/* Save Button */}
                             <button

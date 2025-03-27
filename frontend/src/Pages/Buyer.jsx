@@ -10,6 +10,7 @@ const BuyerDashboard = () => {
     const [buyerProfile, setBuyerProfile] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [searchQuery, setSearchQuery] = useState("");
     
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("id");
@@ -71,8 +72,17 @@ const BuyerDashboard = () => {
             {!buyerProfile ? (
                 <BuyerProfile createProfile={createProfile} />
             ) : (
-                <>
-                    <PropertyList userId={userId} />
+                <>  
+                    {/* Search Bar */}
+                    <input 
+                        type="text"
+                        placeholder="Search by location..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full p-3 border border-gray-300 rounded-md mb-6"
+                    />
+
+                    <PropertyList userId={userId} searchQuery={searchQuery} />
                     <SavedProperties buyer={buyerProfile} />
                 </>
             )}
