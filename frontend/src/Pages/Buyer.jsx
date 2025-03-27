@@ -11,6 +11,7 @@ const BuyerDashboard = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
+    const [modalOpen, setModalOpen] = useState(false);
     
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("id");
@@ -84,8 +85,59 @@ const BuyerDashboard = () => {
 
                     <PropertyList userId={userId} searchQuery={searchQuery} />
                     <SavedProperties buyer={buyerProfile} />
+
+                {/* AI-powered Property Valuation Section */}
+                <div className="mt-10 p-6 bg-white shadow-lg rounded-xl">
+                        <h2 className="text-2xl font-semibold text-gray-800 mb-4">AI-powered Property Valuation</h2>
+                        <p className="text-gray-600 mb-4">
+                            Get accurate real estate price predictions using our machine learning model trained on market trends.
+                        </p>
+                        <ul className="list-disc list-inside text-gray-700 mb-4">
+                            <li>Accurate price estimation based on real-time data.</li>
+                            <li>Compare market trends before making a decision.</li>
+                            <li>Helps in negotiation and budgeting.</li>
+                        </ul>
+                        <h3 className="text-lg font-medium text-gray-700 mb-2">Subscription Plans</h3>
+                        <p className="text-gray-600">Buyers can access the price prediction feature via:</p>
+                        <ul className="list-disc list-inside text-gray-700 mb-4">
+                            <li><strong>One-time Payment:</strong> ₹499 per property valuation.</li>
+                            <li><strong>Subscription:</strong> ₹999/month for unlimited valuations.</li>
+                        </ul>
+                        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition" onClick={() => setModalOpen(true)}>
+                            Subscribe Now
+                        </button>
+                    </div> 
                 </>
             )}
+
+{modalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                        <h2 className="text-xl font-semibold mb-4">Choose a Subscription Plan</h2>
+                        <ul className="space-y-4">
+                            <li className="p-4 border rounded-lg hover:shadow-lg transition">
+                                <h3 className="font-bold">Basic Plan</h3>
+                                <p>₹299/month - 5 valuations</p>
+                            </li>
+                            <li className="p-4 border rounded-lg hover:shadow-lg transition">
+                                <h3 className="font-bold">Standard Plan</h3>
+                                <p>₹499/month - 15 valuations</p>
+                            </li>
+                            <li className="p-4 border rounded-lg hover:shadow-lg transition">
+                                <h3 className="font-bold">Premium Plan</h3>
+                                <p>₹999/month - Unlimited valuations</p>
+                            </li>
+                        </ul>
+                        <button 
+                            onClick={() => setModalOpen(false)} 
+                            className="mt-4 w-full bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
+            
         </div>
     );
 };

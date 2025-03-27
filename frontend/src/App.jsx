@@ -6,6 +6,7 @@ import SignUp from './Pages/SignUp'
 import About from './Pages/About'
 import Buyer from './Pages/Buyer'
 import Seller from './Pages/Seller'
+import Valuation from './Pages/Valuation'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/buyer" element={<Buyer/>}/>
           <Route path="/seller" element={<Seller/>}/>
+          <Route path="/valuation" element={<Valuation/>}/>
         </Routes>
       </Router>
     </div>
