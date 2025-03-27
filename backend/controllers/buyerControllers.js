@@ -1,4 +1,6 @@
 const Buyer = require('../models/buyerSchema');
+const Seller = require("../models/sellerSchema");
+const PropertyImages = require("../models/propertyImagesSchema")
 
 // Create Buyer Profile
 const createBuyerProfile = async (req, res) => {
@@ -155,6 +157,22 @@ const trackViewedProperty = async (req, res) => {
     }
 };
 
+const listProperties = async (req, res) => {
+    try {
+        const properties = await Seller.find().lean(); // .lean() improves performance
+
+        // Fetch images for all properties in parallel
+        const propertiesWithImages = await Promise.all(properties.map(async (property) => {
+            const images = await PropertyImages.find({ sellerId: property._id });
+            return { ...property, images }; // Create a new object with images field
+        }));
+
+        res.status(200).json(propertiesWithImages);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
 module.exports = {
     createBuyerProfile,
     getBuyerProfile,
@@ -162,5 +180,6 @@ module.exports = {
     deleteBuyerProfile,
     saveProperty,
     removeSavedProperty,
-    trackViewedProperty
+    trackViewedProperty,
+    listProperties
 };

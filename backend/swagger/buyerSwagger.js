@@ -1,5 +1,23 @@
 module.exports = {
     paths: {
+      '/api/buyer/list/' : {
+        get: {
+          summary: 'List all properties',
+          tags: ['Buyer'],
+          security: [{ customAuth: [] }],
+          responses: {
+            200: {
+              description: 'Buyer profile details',
+              content: {
+                'application/json': {
+                  schema: { $ref: '#/components/schemas/Listing' },
+                },
+              },
+            },
+            400: { description: 'Error fetching properities' },
+          }
+        }
+      },
       '/api/buyer/{userId}': {
         post: {
           summary: 'Create a buyer profile',

@@ -24,4 +24,7 @@ router.delete('/delete/:userId/:propertyId', checkAuth, buyerController.removeSa
 // Track viewed property
 router.get('/view/:userId/:propertyId', checkAuth, buyerController.trackViewedProperty);
 
+//List all properties
+router.get('/', checkAuth, buyerController.listProperties);
+
 module.exports = router;
