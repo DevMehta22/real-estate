@@ -26,6 +26,15 @@ const buySubscription = async(req,res)=>{
         }
         let planId;
         switch (plan_type) {
+            case "base":
+                planId = process.env.BASE_PLAN_ID;
+                break;
+            case "standard":
+                planId = process.env.STANDARD_PLAN_ID;
+                break;
+            case "elite":
+                planId = process.env.ELITE_PLAN_ID;
+                break;
             case "basic":
                 planId = process.env.BASIC_PLAN_ID;
                 break;
@@ -44,7 +53,7 @@ const buySubscription = async(req,res)=>{
             customer_notify: 1,
             total_count: 12,
         }).then(async(subscription)=>{
-            subscription.status = "active"
+            // subscription.status = "active"
             console.log(subscription)
           
         
@@ -100,6 +109,7 @@ const paymentVerification = async(req,res)=>{
 const isSubscribed = async(req,res)=>{
     try{
         const userId = req.user._id;
+        console.log(userId)
         const subscription = await subscriptionSchema.findOne({userId:userId});
         if(subscription && subscription.status == 'active'){
             res.status(200).json({success:true,message:"You are subscribed"});

@@ -19,7 +19,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/buyer" element={<Buyer/>}/>
           <Route path="/seller" element={<Seller/>}/>
-          <Route path="/valuation" element={<Valuation/>}/>
+          <Route path="/predict" element={<Valuation/>}/>
         </Routes>
       </Router>
     </div>

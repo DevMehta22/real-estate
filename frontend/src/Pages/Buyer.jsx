@@ -5,6 +5,7 @@ import BASE_URL from "../url";
 import BuyerProfile from "../Components/BuyerProfile";
 import PropertyList from "../Components/PropertyList";
 import SavedProperties from "../Components/SavedProperties";
+import BuyerSubscriptions from "../Components/BuyerSubscriptions";
 
 const BuyerDashboard = () => {
     const [buyerProfile, setBuyerProfile] = useState(null);
@@ -12,10 +13,30 @@ const BuyerDashboard = () => {
     const [error, setError] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [modalOpen, setModalOpen] = useState(false);
+    const [subscriptionActive, setSubscriptionActive] = useState(false);
     
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("id");
     const navigate = useNavigate(); // Hook for redirection
+
+    useEffect(() => {
+        const fetchSubscriptionStatus = async () => {
+            try {
+                const { data } = await axios.get(`${BASE_URL}api/subscription/`,{headers : {Authorization: `Bearer:${token}`}});
+                if (data.success) {
+                    console.log(data)
+                    setSubscriptionActive(true);
+                } else {
+                    setSubscriptionActive(false);
+                }
+            } catch (error) {
+                console.error("Error fetching subscription status:", error);
+                setSubscriptionActive(false);
+            }
+        };
+
+        fetchSubscriptionStatus();
+    }, []);
 
     useEffect(() => {
         const fetchBuyerProfile = async () => {
@@ -40,7 +61,7 @@ const BuyerDashboard = () => {
     const createProfile = async (profileData) => {
         try {
             const response = await axios.post(`${BASE_URL}api/buyer/${userId}`, profileData, {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: { Authorization: `Bearer:${token}` },
             });
             setBuyerProfile(response.data);
         } catch (err) {
@@ -103,31 +124,23 @@ const BuyerDashboard = () => {
                             <li><strong>One-time Payment:</strong> ₹499 per property valuation.</li>
                             <li><strong>Subscription:</strong> ₹999/month for unlimited valuations.</li>
                         </ul>
-                        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition" onClick={() => setModalOpen(true)}>
-                            Subscribe Now
-                        </button>
+                        {!subscriptionActive ? (
+                            <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition" onClick={() => setModalOpen(true)}>
+                                Subscribe Now
+                            </button>
+                        ) : (
+                            <button className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition" onClick={() => navigate("/predict")}>
+                                Predict Pricing
+                            </button>
+                        )}
                     </div> 
                 </>
             )}
 
 {modalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-                        <h2 className="text-xl font-semibold mb-4">Choose a Subscription Plan</h2>
-                        <ul className="space-y-4">
-                            <li className="p-4 border rounded-lg hover:shadow-lg transition">
-                                <h3 className="font-bold">Basic Plan</h3>
-                                <p>₹299/month - 5 valuations</p>
-                            </li>
-                            <li className="p-4 border rounded-lg hover:shadow-lg transition">
-                                <h3 className="font-bold">Standard Plan</h3>
-                                <p>₹499/month - 15 valuations</p>
-                            </li>
-                            <li className="p-4 border rounded-lg hover:shadow-lg transition">
-                                <h3 className="font-bold">Premium Plan</h3>
-                                <p>₹999/month - Unlimited valuations</p>
-                            </li>
-                        </ul>
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-50">
+                        <BuyerSubscriptions userId={userId}/>
                         <button 
                             onClick={() => setModalOpen(false)} 
                             className="mt-4 w-full bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"

@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const {buySubscription,paymentVerification, getKey, isSubscribed} = require('../controllers/subscriptionControllers');
-const {checkAuth,isSeller} = require('../middlewares/auth');
+const {checkAuth} = require('../middlewares/auth');
 
-router.post('/',checkAuth,isSeller,buySubscription)
-router.post('/paymentverification',checkAuth,isSeller,paymentVerification)
-router.get('/',checkAuth,isSeller,isSubscribed)
-router.get('/razorpaykey',checkAuth,isSeller,getKey)
+router.post('/',checkAuth,buySubscription)
+router.post('/paymentverification',checkAuth,paymentVerification)
+router.get('/',checkAuth,isSubscribed)
+router.get('/razorpaykey',checkAuth,getKey)
 
 module.exports = router;
