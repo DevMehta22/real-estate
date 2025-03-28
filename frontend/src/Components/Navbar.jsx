@@ -32,7 +32,7 @@ const Navbar = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
               <img 
-                src="/public/images/logo-removebg-preview.png" 
+                src="images/logo-removebg-preview.png" 
                 alt="EstateVista Logo" 
                 className="h-16 w-auto object-contain" 
               />

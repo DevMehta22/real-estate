@@ -73,7 +73,7 @@ const Home = () => {
             <section
                 className="relative h-screen flex items-center justify-center text-center bg-cover bg-center"
                 style={{ 
-                    backgroundImage: "url('/public/images/background.png')",
+                    backgroundImage: "url('images/background.png')",
                 }}
             >
                 <div className="absolute inset-0 bg-black/60"></div>
