@@ -33,5 +33,4 @@ db.sqlite3
 *.pyo
 *.sqlite3
 *.log
-*.pkl
 .env

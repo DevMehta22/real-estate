@@ -1,10 +1,11 @@
+require('dotenv').config()
 const express = require('express');
 const axios = require("axios");
 const router = express.Router();
 const buyerController = require('../controllers/buyerControllers');
 const {checkAuth} = require('../middlewares/auth');
 
-const DJANGO_API_URL = "http://127.0.0.1:8000/api/valuation/predict/"; // Django API endpoint
+const DJANGO_API_URL = `${process.env.DJANGO_URI}/api/valuation/predict/`; // Django API endpoint
 
 // Route to get property valuation
 
