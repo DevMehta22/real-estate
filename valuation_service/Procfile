@@ -1,1 +1,1 @@
-web: gunicorn valuation_service.wsgi:application
+web: gunicorn real_estate_valuation.wsgi:application
