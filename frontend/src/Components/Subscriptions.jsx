@@ -1,5 +1,15 @@
-import React,{useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { 
+  Star, 
+  Crown, 
+  Rocket, 
+  CheckCircle, 
+  ListChecks, 
+  BarChart2, 
+  Users, 
+  ShieldCheck 
+} from "lucide-react";
 import BASE_URL from "../url";
 
 const SubscriptionPlans = ({userId}) => {
@@ -23,17 +33,20 @@ const SubscriptionPlans = ({userId}) => {
       name: "Basic",
       price: "₹1,000.00",
       frequency: "Every Month",
+      icon: Star,
       features: [
         "List up to 5 properties.",
         "Limited property visibility.",
         "Access to basic analytics.",
         "Standard customer support.",
       ],
+      color: "text-yellow-500"
     },
     {
       name: "Premium",
       price: "₹3,000.00",
       frequency: "Every Month",
+      icon: Crown,
       features: [
         "List up to 15 properties.",
         "Priority visibility on property searches.",
@@ -41,11 +54,13 @@ const SubscriptionPlans = ({userId}) => {
         "Featured property placement.",
         "Priority customer support.",
       ],
+      color: "text-primary"
     },
     {
       name: "Enterprise",
       price: "₹5,000.00",
       frequency: "Every Month",
+      icon: Rocket,
       features: [
         "Unlimited property listings.",
         "Top-tier visibility.",
@@ -53,6 +68,7 @@ const SubscriptionPlans = ({userId}) => {
         "Dedicated account manager and premium support.",
         "Integration with other services.",
       ],
+      color: "text-blue-600"
     },
   ];
 
@@ -84,7 +100,7 @@ const SubscriptionPlans = ({userId}) => {
                 // Handle UI updates for subscription activation
               }
             },
-            theme: { color: "#3399cc" },
+            theme: { color: "#C8A35F" },
           }
         const razorpay = new window.Razorpay(options);
         razorpay.open();
@@ -96,22 +112,54 @@ const SubscriptionPlans = ({userId}) => {
   };
 
   return (
-    <div className="flex justify-center gap-6 p-6 bg-gray-100">
-      {plans.map((plan, index) => (
-        <div key={index} className="border rounded-lg p-6 shadow-lg bg-white w-80 h-85">
-          <h2 className="text-xl font-bold mb-2">{plan.name}</h2>
-          <p className="text-gray-700 text-lg font-semibold">{plan.price}</p>
-          <p className="text-gray-600 mb-4">{plan.frequency}</p>
-          <ul className="text-gray-600 mb-4">
-            {plan.features.map((feature, i) => (
-              <li key={i} className="list-disc ml-4">{feature}</li>
-            ))}
-          </ul>
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg w-full hover:bg-blue-700 " onClick={() => handleSubscribe(plan.name)}>
-          {loading ? "Processing..." : "Select Plan"}
-          </button>
-        </div>
-      ))}
+    <div className="min-h-screen bg-secondary flex items-center justify-center p-6">
+      <div className="flex justify-center gap-8 w-full max-w-5xl">
+        {plans.map((plan, index) => {
+          const PlanIcon = plan.icon;
+          return (
+            <div 
+              key={index} 
+              className="border-2 border-highlight rounded-2xl p-6 shadow-2xl bg-secondary w-96 transform transition-all duration-300 hover:scale-105 hover:shadow-primary/50"
+            >
+              <div className="flex items-center mb-4">
+                <PlanIcon className={`mr-4 ${plan.color} w-12 h-12`} />
+                <h2 className="text-2xl font-bold text-text">{plan.name}</h2>
+              </div>
+              <div className="mb-4">
+                <p className="text-text text-3xl font-semibold">{plan.price}</p>
+                <p className="text-highlight/70 text-sm">{plan.frequency}</p>
+              </div>
+              <ul className="text-text mb-6 space-y-2">
+                {plan.features.map((feature, i) => (
+                  <li key={i} className="flex items-center">
+                    <CheckCircle className="mr-2 text-primary w-5 h-5" />
+                    <span className="text-sm">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <button 
+                className="w-full py-3 rounded-lg transition-all duration-300 
+                bg-primary text-secondary hover:bg-highlight 
+                font-semibold flex items-center justify-center"
+                onClick={() => handleSubscribe(plan.name)}
+                disabled={loading}
+              >
+                {loading ? (
+                  <div className="flex items-center">
+                    <ShieldCheck className="mr-2 animate-pulse" />
+                    Processing...
+                  </div>
+                ) : (
+                  <>
+                    <Users className="mr-2" />
+                    Select Plan
+                  </>
+                )}
+              </button>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };
