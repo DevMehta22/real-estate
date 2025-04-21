@@ -1,3 +1,4 @@
+const express = require('express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const sellerSwagger = require('./swagger/sellerSwagger');
@@ -16,8 +17,8 @@ const options = {
     },
     servers: [
       {
-        url: `http://localhost:${process.env.PORT}`,
-        description: 'Development server',
+        url: 'https://estate-vista-backend.vercel.app' || `http://localhost:${process.env.PORT}`, // ✅ Hardcoded production URL
+        description: 'Production server',
       },
     ],
     components: {
@@ -49,11 +50,15 @@ const options = {
 const specs = swaggerJsdoc(options);
 
 module.exports = (app) => {
+  // ✅ Serve static files from 'public' folder (needed for favicon, etc.)
+  app.use(express.static('public'));
+
+  // ✅ Setup Swagger
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
     explorer: true,
     customSiteTitle: 'Real Estate API Documentation',
     customCss: '.swagger-ui .topbar { display: none }',
-    customfavIcon: '/public/favicon.ico',
+    customfavIcon: '/favicon.ico', // ✅ Correct path
     swaggerOptions: {
       persistAuthorization: true,
       displayRequestDuration: true,
