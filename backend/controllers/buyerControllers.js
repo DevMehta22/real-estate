@@ -133,7 +133,6 @@ const trackViewedProperty = async (req, res) => {
         if (!buyer) {
             return res.status(404).json({ message: 'Buyer profile not found' });
         }
-        console.log(buyer)
 
         // Add or update view timestamp
         const existingView = buyer.viewedProperties.find(

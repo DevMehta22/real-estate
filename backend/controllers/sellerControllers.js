@@ -20,7 +20,6 @@ const createSellerListing = async (req, res) => {
     try {
         const {userId} = req.params;
         const isSubscribed  = await Subscription.findOne({userId:userId})
-        console.log(isSubscribed)
         if(!isSubscribed || isSubscribed.status!='active'){
             return res.status(401).json({message: 'You are not subscribed to our service'})
         }
@@ -114,7 +113,6 @@ const updateListing = async (req, res) => {
             Amenities:amenities,
             Bedrooms:bedrooms,
             Bathrooms:bathrooms}, { new: true });
-        console.log(updatedListing)
         
         if (!updatedListing) {
             return res.status(404).json({ message: 'Listing not found' });
@@ -195,7 +193,6 @@ const deleteAllImages = async(req,res)=>{
     try{
         const {listingId} = req.params;
         const propertyImages = await PropertyImage.findOne({sellerId:listingId});
-        console.log(propertyImages)
         if(!propertyImages){
             return res.status(404).json({message: 'No images found'});
             }

@@ -87,7 +87,6 @@ const SubscriptionPlans = ({userId}) => {
             name: `Estate Vista`,
             description: `Subscription for ${planName} plan`,
             handler: async (paymentResponse) => {
-                console.log(paymentResponse)
               // Step 3: Verify Payment
               const verifyResponse = await axios.post(`${BASE_URL}api/subscription/paymentverification`, {
                 razorpay_subscription_id: paymentResponse.razorpay_subscription_id,

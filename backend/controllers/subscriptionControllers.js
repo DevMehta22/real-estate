@@ -16,7 +16,6 @@ const getKey = async (req, res) => {
 
 const buySubscription = async(req,res)=>{
     try{
-        console.log(req.user)
         const user_id = req.user._id;
         const existingSubscription = await subscriptionSchema.findOne({userId:user_id});
         const {plan_type} = req.body;
@@ -54,7 +53,6 @@ const buySubscription = async(req,res)=>{
             total_count: 12,
         }).then(async(subscription)=>{
             // subscription.status = "active"
-            console.log(subscription)
           
         
             const newSubscription = new SubscriptionSchema({
@@ -109,7 +107,6 @@ const paymentVerification = async(req,res)=>{
 const isSubscribed = async(req,res)=>{
     try{
         const userId = req.user._id;
-        console.log(userId)
         const subscription = await subscriptionSchema.findOne({userId:userId});
         if(subscription && subscription.status == 'active'){
             res.status(200).json({success:true,message:"You are subscribed"});
