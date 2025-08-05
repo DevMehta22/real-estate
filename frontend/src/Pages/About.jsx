@@ -39,9 +39,9 @@ const About = () => {
       description: "Real estate veteran with 15 years of market experience"
     },
     {
-      name: "Priya Patel",
+      name: "Dev Mehta",
       role: "Chief Technology Officer",
-      description: "Expert in AI and machine learning with a passion for real estate tech"
+      description: "Expert in Full stack development & AI/ML with a passion for real estate tech"
     },
     {
       name: "Amit Desai",
@@ -56,16 +56,6 @@ const About = () => {
 
   return (
     <div className="bg-secondary text-text min-h-screen">
-      {/* Back Button
-      <div className="absolute top-4 left-4">
-        <button 
-          onClick={handleGoBack}
-          className="flex items-center text-primary hover:text-highlight transition-colors p-2 rounded-full"
-        >
-          <ArrowLeft size={24} className="mr-2" />
-          <span className="font-medium">Back</span>
-        </button>
-      </div> */}
       <Navbar/>
 
       {/* Hero Section */}

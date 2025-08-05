@@ -226,16 +226,6 @@ const Home = () => {
 </section>
 
 {/* Footer */}
-{/* <footer className="py-6 text-center bg-secondary">
-<div className="container mx-auto px-4">
-    <p className="text-text">© 2025 EstateVista. All Rights Reserved.</p>
-    <div className="mt-4 flex justify-center space-x-6">
-        <a href="#" className="text-text hover:text-primary">Privacy Policy</a>
-        <a href="#" className="text-text hover:text-primary">Terms of Service</a>
-        <a href="#" className="text-text hover:text-primary">Contact Us</a>
-    </div>
-</div>
-</footer> */}
 <Footer/>
         </div>
     );
